@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "811317793691",
+    "firebase_url": "https://occupation-fc1fb.firebaseio.com",
+    "project_id": "occupation-fc1fb",
+    "storage_bucket": "occupation-fc1fb.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:811317793691:android:3ce43178b6fb6064",
+        "android_client_info": {
+          "package_name": "somani.siddharth.tophawkstraining"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "811317793691-9bju272ussir76sv2pavc8or6oce4mqg.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBbG_CupRrumU1ymofG-yMNbQiD9hWVhIc"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
