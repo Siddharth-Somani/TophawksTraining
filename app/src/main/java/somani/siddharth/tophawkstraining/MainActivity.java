@@ -16,7 +16,11 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 
+import com.firebase.client.ChildEventListener;
+import com.firebase.client.Firebase;
+import com.firebase.client.FirebaseError;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -30,7 +34,7 @@ public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
     private RecyclerView recyclerView;
     private RecyclerView.Adapter adapter;
-    private DatabaseReference mDatabase;
+    private Firebase mDatabase;
     private ProgressDialog progressDialog;
     private List<UploadPojo> uploads;
     @Override
@@ -39,13 +43,13 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
+        Firebase.setAndroidContext(this);
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(MainActivity.this, Upload.class);
-                startActivity(intent);
+                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+                        .setAction("Action", null).show();
             }
         });
 
@@ -67,10 +71,10 @@ public class MainActivity extends AppCompatActivity
         //displaying progress dialog while fetching images
         progressDialog.setMessage("Please wait...");
         progressDialog.show();
-        mDatabase = FirebaseDatabase.getInstance().getReference(Constants.DATABASE_PATH_UPLOADS);
+        mDatabase = new Firebase("https://occupation-fc1fb.firebaseio.com/").child("Modules");
 
         //adding an event listener to fetch values
-        mDatabase.addValueEventListener(new ValueEventListener() {
+       /* mDatabase.addChildEventListener()EventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
                 //dismissing the progress dialog
@@ -80,21 +84,44 @@ public class MainActivity extends AppCompatActivity
                 for (DataSnapshot postSnapshot : snapshot.getChildren()) {
                     UploadPojo upload = postSnapshot.getValue(UploadPojo.class);
                     uploads.add(upload);
-                }
+                }*/
+       mDatabase.addChildEventListener(new ChildEventListener() {
+           @Override
+           public void onChildAdded(com.firebase.client.DataSnapshot dataSnapshot, String s) {
+               progressDialog.dismiss();
+               String name = dataSnapshot.child("name").getValue(String.class);
+               String url = dataSnapshot.child("url").getValue(String.class);
+              // Toast.makeText(MainActivity.this,dataSnapshot.getKey(),Toast.LENGTH_LONG).show();
+               UploadPojo uploadPojo=new UploadPojo(name,url);
+               uploads.add(uploadPojo);
+           }
+
+           @Override
+           public void onChildChanged(com.firebase.client.DataSnapshot dataSnapshot, String s) {
+
+           }
+
+           @Override
+           public void onChildRemoved(com.firebase.client.DataSnapshot dataSnapshot) {
+
+           }
+
+           @Override
+           public void onChildMoved(com.firebase.client.DataSnapshot dataSnapshot, String s) {
+
+           }
+
+           @Override
+           public void onCancelled(FirebaseError firebaseError) {
+
+           }
+       });
                 //creating adapter
                 adapter = new MyAdapter(getApplicationContext(), uploads);
 
                 //adding adapter to recyclerview
                 recyclerView.setAdapter(adapter);
             }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                progressDialog.dismiss();
-            }
-        });
-
-    }
 
     @Override
     public void onBackPressed() {
