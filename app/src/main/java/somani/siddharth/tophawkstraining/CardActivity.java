@@ -22,7 +22,7 @@ public class CardActivity extends AppCompatActivity {
     String childl;
     private RecyclerView recyclerView;
     private RecyclerView.Adapter adapter;
-    private Firebase mDatabase;
+    public static Firebase mDatabase;
     private ProgressDialog progressDialog;
     private List<UploadPojo> uploads;
     @Override
@@ -53,7 +53,7 @@ public class CardActivity extends AppCompatActivity {
         progressDialog.setMessage("Please wait...");
         progressDialog.show();
         //Toast.makeText(CardActivity.this,childl,Toast.LENGTH_LONG).show();
-        mDatabase = new Firebase("https://occupation-fc1fb.firebaseio.com/Modules").child(childl);
+        mDatabase = new Firebase("https://occupation-fc1fb.firebaseio.com/Modules").child(childl).child("SubModules");
         mDatabase.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(com.firebase.client.DataSnapshot dataSnapshot, String s) {

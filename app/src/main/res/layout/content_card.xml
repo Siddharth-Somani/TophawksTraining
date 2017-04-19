@@ -18,7 +18,5 @@
         android:clipToPadding="false"
         android:paddingTop="20dp"
         >
-
     </android.support.v7.widget.RecyclerView>
-
 </LinearLayout>

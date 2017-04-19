@@ -7,9 +7,22 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.widget.Toast;
+
+import com.firebase.client.ChildEventListener;
+import com.firebase.client.Firebase;
+import com.firebase.client.FirebaseError;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class Modules extends AppCompatActivity {
 ViewPager viewPager;
+    String childl;
+    public static Firebase mDatabase1,mDatabase2,mDatabase3;
+    private List<SlidesPojo> slides;
+    private List<String> s;
+    public static String no;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -24,17 +37,82 @@ ViewPager viewPager;
                 finish();
             }
         });
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        Firebase.setAndroidContext(this);
+        Bundle extras=getIntent().getExtras();
+        childl= extras.getString("child");
         viewPager=(ViewPager)findViewById(R.id.view_pager);
-        SwipeAdapter swipeAdapter=new SwipeAdapter(getSupportFragmentManager());
-        viewPager.setAdapter(swipeAdapter);
-        fab.setOnClickListener(new View.OnClickListener() {
+        slides=new ArrayList<>();
+        s=new ArrayList<>();
+        //SwipeAdapter swipeAdapter=new SwipeAdapter(getSupportFragmentManager());
+        //viewPager.setAdapter(swipeAdapter);
+        mDatabase1=CardActivity.mDatabase.child(childl);
+        mDatabase2=mDatabase1.child("Slides").child("SlidesInfo").child("Info");
+        mDatabase3=mDatabase1.child("Slides").child("SlidesInfo");
+        mDatabase2.addChildEventListener(new ChildEventListener() {
             @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+            public void onChildAdded(com.firebase.client.DataSnapshot dataSnapshot, String s) {
+                String heading = dataSnapshot.child("heading").getValue(String.class);
+                String url = dataSnapshot.child("url").getValue(String.class);
+                String info = dataSnapshot.child("info").getValue(String.class);
+                //Toast.makeText(Modules.this,dataSnapshot.getKey(),Toast.LENGTH_LONG).show();
+                SlidesPojo slidesdPojo=new SlidesPojo(heading,url,info);
+                slides.add(slidesdPojo);
+
+            }
+
+            @Override
+            public void onChildChanged(com.firebase.client.DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onChildRemoved(com.firebase.client.DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(com.firebase.client.DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onCancelled(FirebaseError firebaseError) {
+
             }
         });
+        mDatabase3.addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(com.firebase.client.DataSnapshot dataSnapshot, String s) {
+                 no=dataSnapshot.child("number").getValue(String.class);
+                CustomSwipeAdapter adapter=new CustomSwipeAdapter(Modules.this,slides);
+                viewPager.setAdapter(adapter);
+
+                //Toast.makeText(Modules.this,no,Toast.LENGTH_LONG).show();
+            }
+
+            @Override
+            public void onChildChanged(com.firebase.client.DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onChildRemoved(com.firebase.client.DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(com.firebase.client.DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onCancelled(FirebaseError firebaseError) {
+
+            }
+        });
+        //Toast.makeText(this,no,Toast.LENGTH_LONG).show();
+
+
     }
 
 }
