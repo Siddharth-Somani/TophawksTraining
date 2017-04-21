@@ -35,7 +35,7 @@ public class MainActivity extends AppCompatActivity
     private RecyclerView recyclerView;
     private RecyclerView.Adapter adapter;
     private Firebase mDatabase;
-    private ProgressDialog progressDialog;
+  //  private ProgressDialog progressDialog;
     private List<UploadPojo> uploads;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,16 +61,9 @@ public class MainActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-        recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
-        recyclerView.setHasFixedSize(true);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        progressDialog = new ProgressDialog(this);
 
         uploads = new ArrayList<>();
-
         //displaying progress dialog while fetching images
-        progressDialog.setMessage("Please wait...");
-        progressDialog.show();
         mDatabase = new Firebase("https://occupation-fc1fb.firebaseio.com/").child("Modules");
 
         //adding an event listener to fetch values
@@ -88,12 +81,14 @@ public class MainActivity extends AppCompatActivity
        mDatabase.addChildEventListener(new ChildEventListener() {
            @Override
            public void onChildAdded(com.firebase.client.DataSnapshot dataSnapshot, String s) {
-               progressDialog.dismiss();
+//               progressDialog.dismiss();
                String name = dataSnapshot.child("name").getValue(String.class);
                String url = dataSnapshot.child("url").getValue(String.class);
               // Toast.makeText(MainActivity.this,dataSnapshot.getKey(),Toast.LENGTH_LONG).show();
                UploadPojo uploadPojo=new UploadPojo(name,url);
                uploads.add(uploadPojo);
+               recyclerView.setAdapter(adapter);
+               adapter.notifyDataSetChanged();
            }
 
            @Override
@@ -116,11 +111,13 @@ public class MainActivity extends AppCompatActivity
 
            }
        });
+        recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
+        recyclerView.setHasFixedSize(true);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
                 //creating adapter
                 adapter = new MyAdapter(getApplicationContext(), uploads);
+        //adding adapter to recyclerview
 
-                //adding adapter to recyclerview
-                recyclerView.setAdapter(adapter);
             }
 
     @Override

@@ -23,7 +23,7 @@ public class CardActivity extends AppCompatActivity {
     private RecyclerView recyclerView;
     private RecyclerView.Adapter adapter;
     public static Firebase mDatabase;
-    private ProgressDialog progressDialog;
+    //private ProgressDialog progressDialog;
     private List<UploadPojo> uploads;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,19 +45,19 @@ public class CardActivity extends AppCompatActivity {
         recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        progressDialog = new ProgressDialog(this);
+       /* progressDialog = new ProgressDialog(this);*/
 
         uploads = new ArrayList<>();
 
         //displaying progress dialog while fetching images
-        progressDialog.setMessage("Please wait...");
-        progressDialog.show();
+       /* progressDialog.setMessage("Please wait...");
+        progressDialog.show();*/
         //Toast.makeText(CardActivity.this,childl,Toast.LENGTH_LONG).show();
         mDatabase = new Firebase("https://occupation-fc1fb.firebaseio.com/Modules").child(childl).child("SubModules");
         mDatabase.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(com.firebase.client.DataSnapshot dataSnapshot, String s) {
-                progressDialog.dismiss();
+               // progressDialog.dismiss();
                 String name = dataSnapshot.child("name").getValue(String.class);
                 String url = dataSnapshot.child("url").getValue(String.class);
                 UploadPojo uploadPojo=new UploadPojo(name,url);
@@ -86,7 +86,6 @@ public class CardActivity extends AppCompatActivity {
         });
         //creating adapter
         adapter = new CardAdapter(getApplicationContext(), uploads);
-
         //adding adapter to recyclerview
         recyclerView.setAdapter(adapter);
 
