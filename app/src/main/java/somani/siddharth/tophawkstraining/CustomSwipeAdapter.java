@@ -8,6 +8,7 @@ import android.support.v4.view.PagerAdapter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.MediaController;
@@ -43,14 +44,16 @@ public class CustomSwipeAdapter extends PagerAdapter {
 
     @Override
     public boolean isViewFromObject(View view, Object object) {
-        return (view==(LinearLayout)object);
+        return (view==object);
     }
 
     @Override
     public Object instantiateItem(ViewGroup container, int position) {
-        layoutInflater= (LayoutInflater) ctx.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        View item_view=layoutInflater.inflate(R.layout.swipe_layout,container,false);
-        Firebase.setAndroidContext(ctx);
+
+        if(position!=Integer.parseInt(no)) {
+            layoutInflater= (LayoutInflater) ctx.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            Firebase.setAndroidContext(ctx);
+            View item_view = layoutInflater.inflate(R.layout.swipe_layout, container, false);
 //        //Video
 //        String str="https://firebasestorage.googleapis.com/v0/b/swipeimplementation.appspot.com/o/Nikon%20D7500-%20Time-lapse%20sample%20video.mp4?alt=media&token=3ae5b5b0-c72e-4ea1-9b87-e4442870b1ed";
 //        Uri uri = Uri.parse(str);
@@ -83,18 +86,19 @@ public class CustomSwipeAdapter extends PagerAdapter {
 //        });
         /*String str="https://firebasestorage.googleapis.com/v0/b/videoplay-e370a.appspot.com/o/Nikon%20D7500-%20Time-lapse%20sample%20video.mp4?alt=media&token=58cdbd51-a96f-481c-80b1-b755928ace58";
         Uri uri = Uri.parse(str);*/
-        SlidesPojo slidesPojo = slides.get(position);
-        ImageView imageView= (ImageView) item_view.findViewById(R.id.image_view);
-        TextView textView= (TextView) item_view.findViewById(R.id.image_count);
-        TextView textView2= (TextView) item_view.findViewById(R.id.image_info);
+            SlidesPojo slidesPojo = slides.get(position);
+            //Toast.makeText(ctx,Integer.toString(position),Toast.LENGTH_LONG).show();
+            ImageView imageView = (ImageView) item_view.findViewById(R.id.image_view);
+            TextView textView = (TextView) item_view.findViewById(R.id.image_count);
+            TextView textView2 = (TextView) item_view.findViewById(R.id.image_info);
        /* final VideoView mVideoView= (VideoView)item_view.findViewById(R.id.VideoView);
         final ProgressBar progressBarLandScape=(ProgressBar)item_view.findViewById(R.id.progressbar);*/
 
-        //Toast.makeText(ctx,Integer.toString(arr[0]),Toast.LENGTH_LONG).show();
-        //Toast.makeText(ctx,Integer.toString(slides.size()),Toast.LENGTH_LONG).show();
-        Glide.with(ctx).load(slidesPojo.getUrl()).into(imageView);
-        textView.setText(slidesPojo.getHeading());
-        textView2.setText(slidesPojo.getInfo());
+            //Toast.makeText(ctx,Integer.toString(arr[0]),Toast.LENGTH_LONG).show();
+            //Toast.makeText(ctx,Integer.toString(slides.size()),Toast.LENGTH_LONG).show();
+            Glide.with(ctx).load(slidesPojo.getUrl()).into(imageView);
+            textView.setText(slidesPojo.getHeading());
+            textView2.setText(slidesPojo.getInfo());
        /* progressBarLandScape.setVisibility(View.VISIBLE);
         MediaController mediaController = new MediaController(ctx);
         mediaController.setAnchorView(mVideoView);
@@ -123,13 +127,39 @@ public class CustomSwipeAdapter extends PagerAdapter {
         }
 */
 
-        container.addView(item_view);
-        return item_view;
+            container.addView(item_view);
+            return item_view;
+        }
+        else
+        {
+            layoutInflater= (LayoutInflater) ctx.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            Firebase.setAndroidContext(ctx);
+            View item_view = layoutInflater.inflate(R.layout.swipe_layout2, container, false);
+            Button now=(Button)item_view.findViewById(R.id.taketestnow);
+            Button later=(Button)item_view.findViewById(R.id.taketestlater);
+            now.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Toast.makeText(ctx,"Take the test now",Toast.LENGTH_LONG).show();
+                }
+            });
+            later.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Toast.makeText(ctx,"Take the test later",Toast.LENGTH_LONG).show();
+                }
+            });
+            container.addView(item_view);
+            return item_view;
+        }
     }
 
     @Override
     public void destroyItem(ViewGroup container, int position, Object object) {
+        if(position!=Integer.parseInt(no))
         container.removeView((LinearLayout)object);
+        else
+        container.removeView((RelativeLayout)object);
     }
     @Override
     public int getCount() {
@@ -138,7 +168,7 @@ public class CustomSwipeAdapter extends PagerAdapter {
         no = Modules.no;
         //Toast.makeText(ctx, no, Toast.LENGTH_LONG).show();
        // if (Integer.parseInt(no) != 0)
-            return Integer.parseInt(no);
+            return Integer.parseInt(no)+1;
 
         // return 2;
     }
