@@ -53,7 +53,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
 
                 mDatabase.addChildEventListener(new ChildEventListener() {
                     @Override
-                    public void onChildAdded(com.firebase.client.DataSnapshot dataSnapshot, String s) {
+                    public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                        /* Toast.makeText(context, dataSnapshot.getKey(), Toast.LENGTH_LONG).show();*/
 
                         if(holder.textViewName.getText().toString().equals(dataSnapshot.child("name").getValue(String.class))) {
@@ -68,17 +68,17 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
                     }
 
                     @Override
-                    public void onChildChanged(com.firebase.client.DataSnapshot dataSnapshot, String s) {
+                    public void onChildChanged(DataSnapshot dataSnapshot, String s) {
 
                     }
 
                     @Override
-                    public void onChildRemoved(com.firebase.client.DataSnapshot dataSnapshot) {
+                    public void onChildRemoved(DataSnapshot dataSnapshot) {
 
                     }
 
                     @Override
-                    public void onChildMoved(com.firebase.client.DataSnapshot dataSnapshot, String s) {
+                    public void onChildMoved(DataSnapshot dataSnapshot, String s) {
 
                     }
 

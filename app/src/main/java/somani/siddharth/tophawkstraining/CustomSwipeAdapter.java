@@ -1,6 +1,7 @@
 package somani.siddharth.tophawkstraining;
 
 import android.content.Context;
+import android.content.Intent;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Build;
@@ -140,7 +141,8 @@ public class CustomSwipeAdapter extends PagerAdapter {
             now.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Toast.makeText(ctx,"Take the test now",Toast.LENGTH_LONG).show();
+                    Intent intent=new Intent(ctx,TestWeb.class);
+                    ctx.startActivity(intent);
                 }
             });
             later.setOnClickListener(new View.OnClickListener() {
