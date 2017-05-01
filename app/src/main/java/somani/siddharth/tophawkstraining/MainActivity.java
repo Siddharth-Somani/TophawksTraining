@@ -76,8 +76,10 @@ public class MainActivity extends AppCompatActivity
 //               progressDialog.dismiss();
                String name = dataSnapshot.child("name").getValue(String.class);
                String url = dataSnapshot.child("url").getValue(String.class);
+               String modules = dataSnapshot.child("modules").getValue(String.class);
+               String minutes = dataSnapshot.child("minutes").getValue(String.class);
               // Toast.makeText(MainActivity.this,dataSnapshot.getKey(),Toast.LENGTH_LONG).show();
-               UploadPojo uploadPojo=new UploadPojo(name,url);
+               UploadPojo uploadPojo=new UploadPojo(name,url,modules,minutes);
                uploads.add(uploadPojo);
                recyclerView.setAdapter(adapter);
                adapter.notifyDataSetChanged();

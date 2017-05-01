@@ -54,8 +54,9 @@ ViewPager viewPager;
                 String heading = dataSnapshot.child("heading").getValue(String.class);
                 String url = dataSnapshot.child("url").getValue(String.class);
                 String info = dataSnapshot.child("info").getValue(String.class);
+                String isimage = dataSnapshot.child("isimage").getValue(String.class);
                 //Toast.makeText(Modules.this,dataSnapshot.getKey(),Toast.LENGTH_LONG).show();
-                SlidesPojo slidesdPojo=new SlidesPojo(heading,url,info);
+                SlidesPojo slidesdPojo=new SlidesPojo(heading,url,info,isimage);
                 slides.add(slidesdPojo);
 
             }

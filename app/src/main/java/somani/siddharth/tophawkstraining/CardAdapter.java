@@ -20,10 +20,10 @@ import java.util.List;
 
 public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder>{
     private Context context;
-    private List<UploadPojo> uploads;
+    private List<CardPojo> uploads;
     public Firebase mDatabase1,mDatabase2;
     String child;
-    public CardAdapter(Context context, List<UploadPojo> uploads) {
+    public CardAdapter(Context context, List<CardPojo> uploads) {
         this.uploads = uploads;
         this.context = context;
     }
@@ -39,12 +39,18 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder>{
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
-        UploadPojo upload = uploads.get(position);
+        CardPojo upload = uploads.get(position);
         mDatabase1=CardActivity.mDatabase;
 
         holder.textViewName.setText(upload.getName());
-
+        holder.textViewNumber.setText(upload.getModules());
+        holder.textViewMinutes.setText(upload.getMinutes());
         Glide.with(context).load(upload.getUrl()).into(holder.imageView);
+        //Glide.with(context).load(upload.getIscompleted()).into(holder.imageView4);
+        if(upload.getIscompleted().equals("yes"))
+            holder.imageView4.setVisibility(View.VISIBLE);
+        /*if(x==1)
+            holder.imageView4.setVisibility(ViewGroup.VISIBLE);*/
         holder.cardView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(final View view) {
@@ -56,6 +62,7 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder>{
 
                         if(holder.textViewName.getText().toString().equals(dataSnapshot.child("name").getValue(String.class))) {
                             child = dataSnapshot.getKey();
+                            //Toast.makeText(context,CardActivity.iscompleted,Toast.LENGTH_LONG).show();
                             //Toast.makeText(context, child, Toast.LENGTH_LONG).show();
                             Intent intent=new Intent(view.getContext(),Modules.class);
                             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -97,13 +104,19 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder>{
     class ViewHolder extends RecyclerView.ViewHolder {
 
         public TextView textViewName;
+        public TextView textViewNumber;
+        public TextView textViewMinutes;
         public ImageView imageView;
+        public ImageView imageView4;
         public CardView cardView;
         public ViewHolder(View itemView) {
             super(itemView);
             cardView=(CardView)itemView.findViewById(R.id.card);
             textViewName = (TextView) itemView.findViewById(R.id.textViewName);
             imageView = (ImageView) itemView.findViewById(R.id.imageView);
+            imageView4 = (ImageView) itemView.findViewById(R.id.imageView4);
+            textViewMinutes = (TextView) itemView.findViewById(R.id.learner);
+            textViewNumber = (TextView) itemView.findViewById(R.id.time);
         }
     }
 }

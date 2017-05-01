@@ -23,8 +23,9 @@ public class CardActivity extends AppCompatActivity {
     private RecyclerView recyclerView;
     private RecyclerView.Adapter adapter;
     public static Firebase mDatabase;
+    public static String iscompleted;
     //private ProgressDialog progressDialog;
-    private List<UploadPojo> uploads;
+    private List<CardPojo> uploads;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -60,7 +61,11 @@ public class CardActivity extends AppCompatActivity {
                // progressDialog.dismiss();
                 String name = dataSnapshot.child("name").getValue(String.class);
                 String url = dataSnapshot.child("url").getValue(String.class);
-                UploadPojo uploadPojo=new UploadPojo(name,url);
+                String modules = dataSnapshot.child("number").getValue(String.class);
+                String minutes = dataSnapshot.child("minutes").getValue(String.class);
+                iscompleted=dataSnapshot.child("iscompleted").getValue(String.class);
+                // Toast.makeText(MainActivity.this,dataSnapshot.getKey(),Toast.LENGTH_LONG).show();
+                CardPojo uploadPojo=new CardPojo(name,url,modules,minutes,iscompleted);
                 uploads.add(uploadPojo);
             }
 

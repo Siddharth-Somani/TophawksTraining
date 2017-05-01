@@ -32,9 +32,6 @@
                 android:layout_centerHorizontal="true"
                 android:layout_marginEnd="5dp"
                 android:layout_marginRight="5dp"
-
-
-
                 android:background="#27AE60" />
             <View
                 android:layout_width="20dp"
@@ -53,7 +50,7 @@
                 android:layout_marginStart="5dp"
                 android:layout_marginTop="40dp"
                 card_view:srcCompat="@drawable/ok"
-
+                android:visibility="invisible"
                 />
         </RelativeLayout>
 

@@ -44,6 +44,9 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
         UploadPojo upload = uploads.get(position);
 
         holder.textViewName.setText(upload.getName());
+        holder.textViewModules.setText(upload.getModules());
+        holder.textViewMinutes.setText(upload.getMinutes());
+        holder.textViewName.setText(upload.getName());
 
         Glide.with(context).load(upload.getUrl()).into(holder.imageView);
         mDatabase = new Firebase("https://occupation-fc1fb.firebaseio.com/").child("Modules");
@@ -100,6 +103,8 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
     class ViewHolder extends RecyclerView.ViewHolder {
 
         public TextView textViewName;
+        public TextView textViewModules;
+        public TextView textViewMinutes;
         public ImageView imageView;
         public CardView cardView;
 
@@ -108,6 +113,8 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
             cardView=(CardView)itemView.findViewById(R.id.card);
             textViewName = (TextView) itemView.findViewById(R.id.textViewName);
             imageView = (ImageView) itemView.findViewById(R.id.imageView);
+            textViewMinutes=(TextView)itemView.findViewById(R.id.time);
+            textViewModules=(TextView)itemView.findViewById(R.id.module);
         }
     }
 }

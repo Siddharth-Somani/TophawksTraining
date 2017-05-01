@@ -45,7 +45,7 @@
                     android:scaleType="fitCenter" />
 
                 <VideoView
-                    android:id="@+id/video_view"
+                    android:id="@+id/VideoView"
                     android:layout_width="match_parent"
                     android:layout_height="205dp"
                     android:layout_gravity="center"

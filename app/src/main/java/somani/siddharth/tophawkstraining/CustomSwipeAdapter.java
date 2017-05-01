@@ -33,10 +33,8 @@ public class CustomSwipeAdapter extends PagerAdapter {
     private Context ctx;
     private List<SlidesPojo> slides;
     private LayoutInflater layoutInflater;
-    Firebase mDatabase1;
-    Firebase mDatabase2;
     String no;
-    int arr[]=new int[10000];static int i=0;
+    public static String bool,is;
     public CustomSwipeAdapter(Context ctx,List<SlidesPojo> slides)
     {
         this.ctx=ctx;
@@ -56,7 +54,7 @@ public class CustomSwipeAdapter extends PagerAdapter {
             Firebase.setAndroidContext(ctx);
             View item_view = layoutInflater.inflate(R.layout.swipe_layout, container, false);
 //        //Video
-//        String str="https://firebasestorage.googleapis.com/v0/b/swipeimplementation.appspot.com/o/Nikon%20D7500-%20Time-lapse%20sample%20video.mp4?alt=media&token=3ae5b5b0-c72e-4ea1-9b87-e4442870b1ed";
+       //String str="https://firebasestorage.googleapis.com/v0/b/swipeimplementation.appspot.com/o/Nikon%20D7500-%20Time-lapse%20sample%20video.mp4?alt=media&token=3ae5b5b0-c72e-4ea1-9b87-e4442870b1ed";
 //        Uri uri = Uri.parse(str);
 //        VideoView mVideoView= (VideoView)findViewById(R.id.VideoView);
 //        final ProgressBar progressBarLandScape=(ProgressBar)findViewById(R.id.progressbar);
@@ -85,22 +83,23 @@ public class CustomSwipeAdapter extends PagerAdapter {
 //                return false;
 //            }
 //        });
-        /*String str="https://firebasestorage.googleapis.com/v0/b/videoplay-e370a.appspot.com/o/Nikon%20D7500-%20Time-lapse%20sample%20video.mp4?alt=media&token=58cdbd51-a96f-481c-80b1-b755928ace58";
-        Uri uri = Uri.parse(str);*/
+        //String str="https://firebasestorage.googleapis.com/v0/b/videoplay-e370a.appspot.com/o/Nikon%20D7500-%20Time-lapse%20sample%20video.mp4?alt=media&token=58cdbd51-a96f-481c-80b1-b755928ace58";
+
             SlidesPojo slidesPojo = slides.get(position);
+            Uri uri = Uri.parse(slidesPojo.getUrl());
             //Toast.makeText(ctx,Integer.toString(position),Toast.LENGTH_LONG).show();
             ImageView imageView = (ImageView) item_view.findViewById(R.id.image_view);
             TextView textView = (TextView) item_view.findViewById(R.id.image_count);
             TextView textView2 = (TextView) item_view.findViewById(R.id.image_info);
-       /* final VideoView mVideoView= (VideoView)item_view.findViewById(R.id.VideoView);
-        final ProgressBar progressBarLandScape=(ProgressBar)item_view.findViewById(R.id.progressbar);*/
+        final VideoView mVideoView= (VideoView)item_view.findViewById(R.id.VideoView);
+        //final ProgressBar progressBarLandScape=(ProgressBar)item_view.findViewById(R.id.progressbar);
 
             //Toast.makeText(ctx,Integer.toString(arr[0]),Toast.LENGTH_LONG).show();
             //Toast.makeText(ctx,Integer.toString(slides.size()),Toast.LENGTH_LONG).show();
             Glide.with(ctx).load(slidesPojo.getUrl()).into(imageView);
             textView.setText(slidesPojo.getHeading());
             textView2.setText(slidesPojo.getInfo());
-       /* progressBarLandScape.setVisibility(View.VISIBLE);
+      // progressBarLandScape.setVisibility(View.VISIBLE);
         MediaController mediaController = new MediaController(ctx);
         mediaController.setAnchorView(mVideoView);
         mVideoView.setMediaController(mediaController);
@@ -113,20 +112,31 @@ public class CustomSwipeAdapter extends PagerAdapter {
                 mVideoView.start();
             }
         });
-       int c=1;
+       /*int c=1;
         if(c==1)
         {
             imageView.setVisibility(View.GONE);
-            progressBarLandScape.setVisibility(View.GONE);
+            //progressBarLandScape.setVisibility(View.GONE);
             mVideoView.setVisibility(View.VISIBLE);
         }
         else if(c!=1)
         {
             imageView.setVisibility(View.VISIBLE);
             mVideoView.setVisibility(View.GONE);
-            progressBarLandScape.setVisibility(View.GONE);
-        }
-*/
+            //progressBarLandScape.setVisibility(View.GONE);
+        }*/
+       if(slidesPojo.getIsimage().equals("no"))
+       {
+           imageView.setVisibility(View.GONE);
+           //progressBarLandScape.setVisibility(View.GONE);
+           mVideoView.setVisibility(View.VISIBLE);
+       }
+       else
+       {
+           imageView.setVisibility(View.VISIBLE);
+           //progressBarLandScape.setVisibility(View.GONE);
+           mVideoView.setVisibility(View.GONE);
+       }
 
             container.addView(item_view);
             return item_view;
@@ -141,6 +151,8 @@ public class CustomSwipeAdapter extends PagerAdapter {
             now.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
+                    bool="yes";
+                    Modules.mDatabase1.child("iscompleted").setValue(bool);
                     Intent intent=new Intent(ctx,TestWeb.class);
                     ctx.startActivity(intent);
                 }
