@@ -148,12 +148,10 @@
                 android:layout_toEndOf="@+id/textView3"
                 android:layout_toRightOf="@+id/textView3"
                 android:background="@android:color/darker_gray"
-
                 >
 
 
             </View>
-
 
         </RelativeLayout>
 

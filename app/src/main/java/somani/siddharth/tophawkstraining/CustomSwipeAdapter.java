@@ -21,6 +21,7 @@ import android.widget.VideoView;
 
 import com.bumptech.glide.Glide;
 import com.firebase.client.ChildEventListener;
+import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
 
@@ -34,7 +35,8 @@ public class CustomSwipeAdapter extends PagerAdapter {
     private List<SlidesPojo> slides;
     private LayoutInflater layoutInflater;
     String no;
-    public static String bool,is;
+    public static String bool,is,url;
+    public static Firebase mDatabase,mDatabase2;
     public CustomSwipeAdapter(Context ctx,List<SlidesPojo> slides)
     {
         this.ctx=ctx;
@@ -148,6 +150,7 @@ public class CustomSwipeAdapter extends PagerAdapter {
             View item_view = layoutInflater.inflate(R.layout.swipe_layout2, container, false);
             Button now=(Button)item_view.findViewById(R.id.taketestnow);
             Button later=(Button)item_view.findViewById(R.id.taketestlater);
+            mDatabase2=new Firebase("https://occupation-fc1fb.firebaseio.com/Tests");
             now.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -160,7 +163,37 @@ public class CustomSwipeAdapter extends PagerAdapter {
             later.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Toast.makeText(ctx,"Take the test later",Toast.LENGTH_LONG).show();
+                    mDatabase=Modules.mDatabase3;
+                    mDatabase.addChildEventListener(new ChildEventListener() {
+                        @Override
+                        public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                            url=dataSnapshot.child("testurl").getValue(String.class);
+                            mDatabase2.push().child("pending").setValue(url);
+                        }
+
+                        @Override
+                        public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+                        }
+
+                        @Override
+                        public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+                        }
+
+                        @Override
+                        public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+                        }
+
+                        @Override
+                        public void onCancelled(FirebaseError firebaseError) {
+
+                        }
+                    });
+                    Toast.makeText(ctx,"You can take the tests later in the tests portal",Toast.LENGTH_LONG).show();
+                    Intent intent=new Intent(ctx,Tests.class);
+                    ctx.startActivity(intent);
                 }
             });
             container.addView(item_view);
