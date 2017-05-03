@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.firebase.client.ChildEventListener;
@@ -51,6 +52,7 @@ public class TestsAdapter extends RecyclerView.Adapter<TestsAdapter.ViewHolder>{
                     public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                         if(holder.textViewName.getText().toString().equals(dataSnapshot.child("pending").getValue(String.class))){
                             child = dataSnapshot.getKey();
+                            Toast.makeText(context,"After taking the test, this test will dissapear from the pending tests portal",Toast.LENGTH_LONG).show();
                         Intent intent=new Intent(context,TestWeb2.class);
                         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                         intent.putExtra("url",holder.textViewName.getText().toString());

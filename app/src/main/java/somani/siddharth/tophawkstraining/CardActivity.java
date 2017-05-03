@@ -9,6 +9,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.firebase.client.ChildEventListener;
@@ -24,6 +25,7 @@ public class CardActivity extends AppCompatActivity {
     private RecyclerView.Adapter adapter;
     public static Firebase mDatabase;
     public static String iscompleted;
+    TextView textView1,textView2;
     //private ProgressDialog progressDialog;
     private List<CardPojo> uploads;
     @Override
@@ -42,7 +44,13 @@ public class CardActivity extends AppCompatActivity {
         });
         Bundle extras=getIntent().getExtras();
         childl= extras.getString("child");
+        String name=extras.getString("name");
+        String minutes=extras.getString("minutes");
         Firebase.setAndroidContext(this);
+        textView1=(TextView)findViewById(R.id.textView9) ;
+        textView2=(TextView)findViewById(R.id.minutes) ;
+        textView1.setText(name);
+        textView2.setText(minutes);
         recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));

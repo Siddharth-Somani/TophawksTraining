@@ -49,7 +49,7 @@ String url;
                 // progressDialog.dismiss();
                 url = dataSnapshot.child("pending").getValue(String.class);
                 TestsPojo testsPojo = new TestsPojo(url);
-                Toast.makeText(Tests.this,dataSnapshot.getKey(),Toast.LENGTH_LONG).show();
+                //Toast.makeText(Tests.this,dataSnapshot.getKey(),Toast.LENGTH_LONG).show();
                 uploads.add(testsPojo);
                 recyclerView.setAdapter(adapter);
                 adapter.notifyDataSetChanged();

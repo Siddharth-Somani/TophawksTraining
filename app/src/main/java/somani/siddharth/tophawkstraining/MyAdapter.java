@@ -65,6 +65,8 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
                             Intent intent=new Intent(view.getContext(),CardActivity.class);
                             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                             intent.putExtra("child",child);
+                            intent.putExtra("name",holder.textViewName.getText().toString());
+                            intent.putExtra("minutes",holder.textViewMinutes.getText().toString());
                             context.startActivity(intent);
 
                         }
