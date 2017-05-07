@@ -16,14 +16,16 @@ import com.firebase.client.ChildEventListener;
 import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 import java.util.List;
 
 public class TestsAdapter extends RecyclerView.Adapter<TestsAdapter.ViewHolder>{
     private Context context;
     private List<TestsPojo> uploads;
-    public Firebase mDatabase1,mDatabase2;
-    String child;
+    public Firebase mDatabase1,mDatabase2,mDatabase3;
+    String child,c;
     public TestsAdapter(Context context, List<TestsPojo> uploads) {
         this.uploads = uploads;
         this.context = context;
@@ -40,48 +42,84 @@ public class TestsAdapter extends RecyclerView.Adapter<TestsAdapter.ViewHolder>{
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
-        TestsPojo upload = uploads.get(position);
-        mDatabase1 = new Firebase("https://occupation-fc1fb.firebaseio.com/Tests");
+        final TestsPojo upload = uploads.get(position);
+        FirebaseAuth auth;
+        auth = FirebaseAuth.getInstance();
+        final FirebaseUser user = auth.getCurrentUser();
+        //mDatabase1 = new Firebase("https://occupation-fc1fb.firebaseio.com/Tests");
         Firebase.setAndroidContext(context);
-        holder.textViewName.setText(upload.getHeading());
-        holder.cardView.setOnClickListener(new View.OnClickListener() {
+        mDatabase3 = new Firebase("https://occupation-fc1fb.firebaseio.com/Users");
+        mDatabase3.addChildEventListener(new ChildEventListener() {
             @Override
-            public void onClick(View view) {
-                mDatabase1.addChildEventListener(new ChildEventListener() {
-                    @Override
-                    public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                        if(holder.textViewName.getText().toString().equals(dataSnapshot.child("pending").getValue(String.class))){
-                            child = dataSnapshot.getKey();
-                            Toast.makeText(context,"After taking the test, this test will dissapear from the pending tests portal",Toast.LENGTH_LONG).show();
-                        Intent intent=new Intent(context,TestWeb2.class);
-                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                        intent.putExtra("url",holder.textViewName.getText().toString());
-                            mDatabase1.child(child).removeValue();
-                        context.startActivity(intent);
-                            }
+            public void onChildAdded(com.firebase.client.DataSnapshot dataSnapshot, String s) {
 
-                    }
+                String email=dataSnapshot.child("email").getValue(String.class);
+                if(email.equals(user.getEmail()))
+                {c=dataSnapshot.getKey();
+                    mDatabase1 = new Firebase("https://occupation-fc1fb.firebaseio.com/Users").child(c).child("Tests");
+                    holder.textViewName.setText(upload.getHeading());
+                    holder.cardView.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            mDatabase1.addChildEventListener(new ChildEventListener() {
+                                @Override
+                                public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                                    if(holder.textViewName.getText().toString().equals(dataSnapshot.child("pending").getValue(String.class))){
+                                        child = dataSnapshot.getKey();
+                                        Toast.makeText(context,"After taking the test, this test will dissapear from the pending tests portal",Toast.LENGTH_LONG).show();
+                                        Intent intent=new Intent(context,TestWeb2.class);
+                                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                        intent.putExtra("url",holder.textViewName.getText().toString());
+                                        mDatabase1.child(child).removeValue();
+                                        context.startActivity(intent);
+                                    }
 
-                    @Override
-                    public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+                                }
 
-                    }
+                                @Override
+                                public void onChildChanged(DataSnapshot dataSnapshot, String s) {
 
-                    @Override
-                    public void onChildRemoved(DataSnapshot dataSnapshot) {
+                                }
 
-                    }
+                                @Override
+                                public void onChildRemoved(DataSnapshot dataSnapshot) {
 
-                    @Override
-                    public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+                                }
 
-                    }
+                                @Override
+                                public void onChildMoved(DataSnapshot dataSnapshot, String s) {
 
-                    @Override
-                    public void onCancelled(FirebaseError firebaseError) {
+                                }
 
-                    }
-                });
+                                @Override
+                                public void onCancelled(FirebaseError firebaseError) {
+
+                                }
+                            });
+
+                        }
+                    });
+                }
+
+            }
+
+            @Override
+            public void onChildChanged(com.firebase.client.DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onChildRemoved(com.firebase.client.DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(com.firebase.client.DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onCancelled(FirebaseError firebaseError) {
 
             }
         });
@@ -101,6 +139,7 @@ public class TestsAdapter extends RecyclerView.Adapter<TestsAdapter.ViewHolder>{
             cardView=(CardView)itemView.findViewById(R.id.card);
             textViewName = (TextView) itemView.findViewById(R.id.textViewName);
             textViewName2 = (TextView) itemView.findViewById(R.id.textViewName2);
+
         }
     }
 }

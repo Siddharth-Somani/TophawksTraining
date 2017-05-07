@@ -24,6 +24,8 @@ import com.firebase.client.ChildEventListener;
 import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,8 +37,8 @@ public class CustomSwipeAdapter extends PagerAdapter {
     private List<SlidesPojo> slides;
     private LayoutInflater layoutInflater;
     String no;
-    public static String bool,is,url;
-    public static Firebase mDatabase,mDatabase2;
+    public static String bool,is,url,c;
+    public static Firebase mDatabase,mDatabase2,mDatabase3;
     public CustomSwipeAdapter(Context ctx,List<SlidesPojo> slides)
     {
         this.ctx=ctx;
@@ -50,7 +52,9 @@ public class CustomSwipeAdapter extends PagerAdapter {
 
     @Override
     public Object instantiateItem(ViewGroup container, int position) {
-
+        FirebaseAuth auth;
+        auth = FirebaseAuth.getInstance();
+        final FirebaseUser user = auth.getCurrentUser();
         if(position!=Integer.parseInt(no)) {
             layoutInflater= (LayoutInflater) ctx.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             Firebase.setAndroidContext(ctx);
@@ -149,26 +153,91 @@ public class CustomSwipeAdapter extends PagerAdapter {
             Firebase.setAndroidContext(ctx);
             View item_view = layoutInflater.inflate(R.layout.swipe_layout2, container, false);
             Button now=(Button)item_view.findViewById(R.id.taketestnow);
-            Button later=(Button)item_view.findViewById(R.id.taketestlater);
-            mDatabase2=new Firebase("https://occupation-fc1fb.firebaseio.com/Tests");
+            final Button later=(Button)item_view.findViewById(R.id.taketestlater);
+            mDatabase3 = new Firebase("https://occupation-fc1fb.firebaseio.com/Users");
+            mDatabase3.addChildEventListener(new ChildEventListener() {
+                @Override
+                public void onChildAdded(com.firebase.client.DataSnapshot dataSnapshot, String s) {
+
+                    String email=dataSnapshot.child("email").getValue(String.class);
+                    if(email.equals(user.getEmail()))
+                    {c=dataSnapshot.getKey();
+                        mDatabase2=new Firebase("https://occupation-fc1fb.firebaseio.com/Users").child(c).child("Tests");
+                        later.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                mDatabase=Modules.mDatabase3;
+                                mDatabase.addChildEventListener(new ChildEventListener() {
+                                    @Override
+                                    public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                                        url=dataSnapshot.child("testurl").getValue(String.class);
+                                        mDatabase2.push().child("pending").setValue(url);
+                                    }
+
+                                    @Override
+                                    public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+                                    }
+
+                                    @Override
+                                    public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+                                    }
+
+                                    @Override
+                                    public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+                                    }
+
+                                    @Override
+                                    public void onCancelled(FirebaseError firebaseError) {
+
+                                    }
+                                });
+                                Toast.makeText(ctx,"You can take the tests later in the tests portal",Toast.LENGTH_LONG).show();
+                                Intent intent=new Intent(ctx,Tests.class);
+                                ctx.startActivity(intent);
+                            }
+                        });
+                    }
+
+                }
+
+                @Override
+                public void onChildChanged(com.firebase.client.DataSnapshot dataSnapshot, String s) {
+
+                }
+
+                @Override
+                public void onChildRemoved(com.firebase.client.DataSnapshot dataSnapshot) {
+
+                }
+
+                @Override
+                public void onChildMoved(com.firebase.client.DataSnapshot dataSnapshot, String s) {
+
+                }
+
+                @Override
+                public void onCancelled(FirebaseError firebaseError) {
+
+                }
+            });
+
             now.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    bool="yes";
-                    Modules.mDatabase1.child("iscompleted").setValue(bool);
-                    Intent intent=new Intent(ctx,TestWeb.class);
-                    ctx.startActivity(intent);
-                }
-            });
-            later.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    mDatabase=Modules.mDatabase3;
-                    mDatabase.addChildEventListener(new ChildEventListener() {
+                    mDatabase3.addChildEventListener(new ChildEventListener() {
                         @Override
                         public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                            url=dataSnapshot.child("testurl").getValue(String.class);
-                            mDatabase2.push().child("pending").setValue(url);
+                            String email=dataSnapshot.child("email").getValue(String.class);
+                            if(email.equals(user.getEmail())) {
+                                String name = dataSnapshot.child("name").getValue(String.class);
+                                bool = "yes";
+                                Modules.mDatabase1.child(name).setValue(bool);
+                                Intent intent = new Intent(ctx, TestWeb.class);
+                                ctx.startActivity(intent);
+                            }
                         }
 
                         @Override
@@ -191,11 +260,10 @@ public class CustomSwipeAdapter extends PagerAdapter {
 
                         }
                     });
-                    Toast.makeText(ctx,"You can take the tests later in the tests portal",Toast.LENGTH_LONG).show();
-                    Intent intent=new Intent(ctx,Tests.class);
-                    ctx.startActivity(intent);
+
                 }
             });
+
             container.addView(item_view);
             return item_view;
         }

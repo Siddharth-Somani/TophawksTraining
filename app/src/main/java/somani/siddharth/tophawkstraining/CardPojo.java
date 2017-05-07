@@ -32,4 +32,5 @@ public class CardPojo{
     public String getModules(){return modules;}
     public String getMinutes(){return minutes;}
     public String getIscompleted(){return iscompleted;}
+    public void setIscompleted(String iscompleted){this.iscompleted=iscompleted;}
 }

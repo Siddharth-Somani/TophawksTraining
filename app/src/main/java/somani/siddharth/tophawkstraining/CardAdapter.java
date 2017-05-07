@@ -47,6 +47,10 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder>{
         holder.textViewMinutes.setText(upload.getMinutes());
         Glide.with(context).load(upload.getUrl()).into(holder.imageView);
         //Glide.with(context).load(upload.getIscompleted()).into(holder.imageView4);
+        if(upload.getIscompleted()==null)
+        {String s;
+        s="no";
+        upload.setIscompleted(s);}
         if(upload.getIscompleted().equals("yes"))
             holder.imageView4.setVisibility(View.VISIBLE);
         /*if(x==1)

@@ -209,7 +209,7 @@ public class MainActivity extends AppCompatActivity
             FirebaseAuth auth;
             auth = FirebaseAuth.getInstance();
             FirebaseUser user = auth.getCurrentUser();
-            Toast.makeText(MainActivity.this,user.getEmail(),Toast.LENGTH_LONG).show();
+            //Toast.makeText(MainActivity.this,user.getEmail(),Toast.LENGTH_LONG).show();
             auth.signOut();
             startActivity(new Intent(MainActivity.this, LoginActivity.class));
             finish();

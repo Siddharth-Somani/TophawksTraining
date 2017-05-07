@@ -27,7 +27,7 @@ public class CardActivity extends AppCompatActivity {
     private RecyclerView recyclerView;
     private RecyclerView.Adapter adapter;
     public static Firebase mDatabase,mDatabase1;
-    public static String iscompleted;
+    public static String iscompleted,n;
     TextView textView1,textView2;
     //private ProgressDialog progressDialog;
     private List<CardPojo> uploads;
@@ -75,16 +75,22 @@ public class CardActivity extends AppCompatActivity {
                 String email=dataSnapshot.child("email").getValue(String.class);
                 if(email.equals(user.getEmail()))
                 {c=dataSnapshot.child("company").getValue(String.class);
+                    n=dataSnapshot.child("name").getValue(String.class);
                     mDatabase = new Firebase("https://occupation-fc1fb.firebaseio.com/").child(c).child(childl).child("SubModules");
                     mDatabase.addChildEventListener(new ChildEventListener() {
                         @Override
                         public void onChildAdded(com.firebase.client.DataSnapshot dataSnapshot, String s) {
+
                             // progressDialog.dismiss();
                             String name = dataSnapshot.child("name").getValue(String.class);
                             String url = dataSnapshot.child("url").getValue(String.class);
                             String modules = dataSnapshot.child("number").getValue(String.class);
                             String minutes = dataSnapshot.child("minutes").getValue(String.class);
-                            iscompleted=dataSnapshot.child("iscompleted").getValue(String.class);
+                            //mDatabase.child(dataSnapshot.getKey()).child(n).setValue("no");
+                            iscompleted=dataSnapshot.child(n).getValue(String.class);
+                            if(iscompleted==null)
+                                mDatabase.child(dataSnapshot.getKey()).child(n).setValue("no");
+                            iscompleted=dataSnapshot.child(n).getValue(String.class);
                             // Toast.makeText(MainActivity.this,dataSnapshot.getKey(),Toast.LENGTH_LONG).show();
                             CardPojo uploadPojo=new CardPojo(name,url,modules,minutes,iscompleted);
                             uploads.add(uploadPojo);
