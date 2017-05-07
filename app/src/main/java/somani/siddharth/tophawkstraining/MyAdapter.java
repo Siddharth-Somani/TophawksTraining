@@ -17,14 +17,16 @@ import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
 import com.firebase.client.ValueEventListener;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 import java.util.List;
 
 public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
     private Context context;
     private List<UploadPojo> uploads;
-    private Firebase mDatabase;
-    String child;
+    private Firebase mDatabase,mDatabase1;
+    String child,c;
     public MyAdapter(Context context, List<UploadPojo> uploads) {
         this.uploads = uploads;
         this.context = context;
@@ -47,54 +49,90 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
         holder.textViewModules.setText(upload.getModules());
         holder.textViewMinutes.setText(upload.getMinutes());
         holder.textViewName.setText(upload.getName());
+        FirebaseAuth auth;
+        auth = FirebaseAuth.getInstance();
+        final FirebaseUser user = auth.getCurrentUser();
+        mDatabase1 = new Firebase("https://occupation-fc1fb.firebaseio.com/Users");
 
         Glide.with(context).load(upload.getUrl()).into(holder.imageView);
-        mDatabase = new Firebase("https://occupation-fc1fb.firebaseio.com/").child("Modules");
-        holder.cardView.setOnClickListener(new View.OnClickListener() {
+        mDatabase1.addChildEventListener(new ChildEventListener() {
             @Override
-            public void onClick(final View view) {
+            public void onChildAdded(com.firebase.client.DataSnapshot dataSnapshot, String s) {
 
-                mDatabase.addChildEventListener(new ChildEventListener() {
-                    @Override
-                    public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                String email=dataSnapshot.child("email").getValue(String.class);
+                if(email.equals(user.getEmail()))
+                {c=dataSnapshot.child("company").getValue(String.class);
+                    mDatabase = new Firebase("https://occupation-fc1fb.firebaseio.com/").child(c);
+                    holder.cardView.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(final View view) {
+
+                            mDatabase.addChildEventListener(new ChildEventListener() {
+                                @Override
+                                public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                        /* Toast.makeText(context, dataSnapshot.getKey(), Toast.LENGTH_LONG).show();*/
 
-                        if(holder.textViewName.getText().toString().equals(dataSnapshot.child("name").getValue(String.class))) {
-                            child = dataSnapshot.getKey();
-                            //Toast.makeText(context, child, Toast.LENGTH_LONG).show();
-                            Intent intent=new Intent(view.getContext(),CardActivity.class);
-                            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                            intent.putExtra("child",child);
-                            intent.putExtra("name",holder.textViewName.getText().toString());
-                            intent.putExtra("minutes",holder.textViewMinutes.getText().toString());
-                            context.startActivity(intent);
+                                    if(holder.textViewName.getText().toString().equals(dataSnapshot.child("name").getValue(String.class))) {
+                                        child = dataSnapshot.getKey();
+                                        //Toast.makeText(context, child, Toast.LENGTH_LONG).show();
+                                        Intent intent=new Intent(view.getContext(),CardActivity.class);
+                                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                        intent.putExtra("child",child);
+                                        intent.putExtra("name",holder.textViewName.getText().toString());
+                                        intent.putExtra("minutes",holder.textViewMinutes.getText().toString());
+                                        context.startActivity(intent);
+
+                                    }
+                                }
+
+                                @Override
+                                public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+                                }
+
+                                @Override
+                                public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+                                }
+
+                                @Override
+                                public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+                                }
+
+                                @Override
+                                public void onCancelled(FirebaseError firebaseError) {
+
+                                }
+                            });
 
                         }
-                    }
+                    });
+                }
 
-                    @Override
-                    public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+            }
 
-                    }
+            @Override
+            public void onChildChanged(com.firebase.client.DataSnapshot dataSnapshot, String s) {
 
-                    @Override
-                    public void onChildRemoved(DataSnapshot dataSnapshot) {
+            }
 
-                    }
+            @Override
+            public void onChildRemoved(com.firebase.client.DataSnapshot dataSnapshot) {
 
-                    @Override
-                    public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+            }
 
-                    }
+            @Override
+            public void onChildMoved(com.firebase.client.DataSnapshot dataSnapshot, String s) {
 
-                    @Override
-                    public void onCancelled(FirebaseError firebaseError) {
+            }
 
-                    }
-                });
+            @Override
+            public void onCancelled(FirebaseError firebaseError) {
 
             }
         });
+
     }
 
     @Override

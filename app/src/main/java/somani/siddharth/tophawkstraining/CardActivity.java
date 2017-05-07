@@ -13,17 +13,20 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.firebase.client.ChildEventListener;
+import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class CardActivity extends AppCompatActivity {
-    String childl;
+    String childl,c;
     private RecyclerView recyclerView;
     private RecyclerView.Adapter adapter;
-    public static Firebase mDatabase;
+    public static Firebase mDatabase,mDatabase1;
     public static String iscompleted;
     TextView textView1,textView2;
     //private ProgressDialog progressDialog;
@@ -36,6 +39,9 @@ public class CardActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
+        FirebaseAuth auth;
+        auth = FirebaseAuth.getInstance();
+        final FirebaseUser user = auth.getCurrentUser();
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -62,33 +68,65 @@ public class CardActivity extends AppCompatActivity {
        /* progressDialog.setMessage("Please wait...");
         progressDialog.show();*/
         //Toast.makeText(CardActivity.this,childl,Toast.LENGTH_LONG).show();
-        mDatabase = new Firebase("https://occupation-fc1fb.firebaseio.com/Modules").child(childl).child("SubModules");
-        mDatabase.addChildEventListener(new ChildEventListener() {
+        mDatabase1 = new Firebase("https://occupation-fc1fb.firebaseio.com/Users");
+        mDatabase1.addChildEventListener(new ChildEventListener() {
             @Override
-            public void onChildAdded(com.firebase.client.DataSnapshot dataSnapshot, String s) {
-               // progressDialog.dismiss();
-                String name = dataSnapshot.child("name").getValue(String.class);
-                String url = dataSnapshot.child("url").getValue(String.class);
-                String modules = dataSnapshot.child("number").getValue(String.class);
-                String minutes = dataSnapshot.child("minutes").getValue(String.class);
-                iscompleted=dataSnapshot.child("iscompleted").getValue(String.class);
-                // Toast.makeText(MainActivity.this,dataSnapshot.getKey(),Toast.LENGTH_LONG).show();
-                CardPojo uploadPojo=new CardPojo(name,url,modules,minutes,iscompleted);
-                uploads.add(uploadPojo);
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                String email=dataSnapshot.child("email").getValue(String.class);
+                if(email.equals(user.getEmail()))
+                {c=dataSnapshot.child("company").getValue(String.class);
+                    mDatabase = new Firebase("https://occupation-fc1fb.firebaseio.com/").child(c).child(childl).child("SubModules");
+                    mDatabase.addChildEventListener(new ChildEventListener() {
+                        @Override
+                        public void onChildAdded(com.firebase.client.DataSnapshot dataSnapshot, String s) {
+                            // progressDialog.dismiss();
+                            String name = dataSnapshot.child("name").getValue(String.class);
+                            String url = dataSnapshot.child("url").getValue(String.class);
+                            String modules = dataSnapshot.child("number").getValue(String.class);
+                            String minutes = dataSnapshot.child("minutes").getValue(String.class);
+                            iscompleted=dataSnapshot.child("iscompleted").getValue(String.class);
+                            // Toast.makeText(MainActivity.this,dataSnapshot.getKey(),Toast.LENGTH_LONG).show();
+                            CardPojo uploadPojo=new CardPojo(name,url,modules,minutes,iscompleted);
+                            uploads.add(uploadPojo);
+                        }
+
+                        @Override
+                        public void onChildChanged(com.firebase.client.DataSnapshot dataSnapshot, String s) {
+
+                        }
+
+                        @Override
+                        public void onChildRemoved(com.firebase.client.DataSnapshot dataSnapshot) {
+
+                        }
+
+                        @Override
+                        public void onChildMoved(com.firebase.client.DataSnapshot dataSnapshot, String s) {
+
+                        }
+
+                        @Override
+                        public void onCancelled(FirebaseError firebaseError) {
+
+                        }
+                    });
+
+                }
+
             }
 
             @Override
-            public void onChildChanged(com.firebase.client.DataSnapshot dataSnapshot, String s) {
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
 
             }
 
             @Override
-            public void onChildRemoved(com.firebase.client.DataSnapshot dataSnapshot) {
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
 
             }
 
             @Override
-            public void onChildMoved(com.firebase.client.DataSnapshot dataSnapshot, String s) {
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
 
             }
 
@@ -97,6 +135,7 @@ public class CardActivity extends AppCompatActivity {
 
             }
         });
+
         //creating adapter
         adapter = new CardAdapter(getApplicationContext(), uploads);
         //adding adapter to recyclerview

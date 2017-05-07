@@ -3,6 +3,7 @@ package somani.siddharth.tophawkstraining;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.widget.LinearLayoutManager;
@@ -16,11 +17,14 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Button;
 import android.widget.Toast;
 
 import com.firebase.client.ChildEventListener;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -34,9 +38,12 @@ public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
     private RecyclerView recyclerView;
     private RecyclerView.Adapter adapter;
-    private Firebase mDatabase;
+    private Firebase mDatabase,mDatabase1;
+    Button logout;
   //  private ProgressDialog progressDialog;
     private List<UploadPojo> uploads;
+     String c;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -44,7 +51,7 @@ public class MainActivity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         Firebase.setAndroidContext(this);
-
+        //logout=(Button)findViewById(R.id.logout);
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -53,10 +60,13 @@ public class MainActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-
+        FirebaseAuth auth;
+        auth = FirebaseAuth.getInstance();
+        final FirebaseUser user = auth.getCurrentUser();
         uploads = new ArrayList<>();
         //displaying progress dialog while fetching images
-        mDatabase = new Firebase("https://occupation-fc1fb.firebaseio.com/").child("Modules");
+        mDatabase1 = new Firebase("https://occupation-fc1fb.firebaseio.com/Users");
+
 
         //adding an event listener to fetch values
        /* mDatabase.addChildEventListener()EventListener(new ValueEventListener() {
@@ -70,19 +80,51 @@ public class MainActivity extends AppCompatActivity
                     UploadPojo upload = postSnapshot.getValue(UploadPojo.class);
                     uploads.add(upload);
                 }*/
-       mDatabase.addChildEventListener(new ChildEventListener() {
+       mDatabase1.addChildEventListener(new ChildEventListener() {
            @Override
            public void onChildAdded(com.firebase.client.DataSnapshot dataSnapshot, String s) {
+
+               String email=dataSnapshot.child("email").getValue(String.class);
+               if(email.equals(user.getEmail()))
+               {c=dataSnapshot.child("company").getValue(String.class);
+                   mDatabase = new Firebase("https://occupation-fc1fb.firebaseio.com/").child(c);
+                   mDatabase.addChildEventListener(new ChildEventListener() {
+                       @Override
+                       public void onChildAdded(com.firebase.client.DataSnapshot dataSnapshot, String s) {
 //               progressDialog.dismiss();
-               String name = dataSnapshot.child("name").getValue(String.class);
-               String url = dataSnapshot.child("url").getValue(String.class);
-               String modules = dataSnapshot.child("modules").getValue(String.class);
-               String minutes = dataSnapshot.child("minutes").getValue(String.class);
-              // Toast.makeText(MainActivity.this,dataSnapshot.getKey(),Toast.LENGTH_LONG).show();
-               UploadPojo uploadPojo=new UploadPojo(name,url,modules,minutes);
-               uploads.add(uploadPojo);
-               recyclerView.setAdapter(adapter);
-               adapter.notifyDataSetChanged();
+                           String name = dataSnapshot.child("name").getValue(String.class);
+                           String url = dataSnapshot.child("url").getValue(String.class);
+                           String modules = dataSnapshot.child("modules").getValue(String.class);
+                           String minutes = dataSnapshot.child("minutes").getValue(String.class);
+                           // Toast.makeText(MainActivity.this,dataSnapshot.getKey(),Toast.LENGTH_LONG).show();
+                           UploadPojo uploadPojo=new UploadPojo(name,url,modules,minutes);
+                           uploads.add(uploadPojo);
+                           recyclerView.setAdapter(adapter);
+                           adapter.notifyDataSetChanged();
+                       }
+
+                       @Override
+                       public void onChildChanged(com.firebase.client.DataSnapshot dataSnapshot, String s) {
+
+                       }
+
+                       @Override
+                       public void onChildRemoved(com.firebase.client.DataSnapshot dataSnapshot) {
+
+                       }
+
+                       @Override
+                       public void onChildMoved(com.firebase.client.DataSnapshot dataSnapshot, String s) {
+
+                       }
+
+                       @Override
+                       public void onCancelled(FirebaseError firebaseError) {
+
+                       }
+                   });
+               }
+
            }
 
            @Override
@@ -105,6 +147,8 @@ public class MainActivity extends AppCompatActivity
 
            }
        });
+
+        Toast.makeText(MainActivity.this,c,Toast.LENGTH_LONG).show();
         recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -159,6 +203,30 @@ public class MainActivity extends AppCompatActivity
             // Handle the camera action
             Intent intent=new Intent(this,Tests.class);
             startActivity(intent);
+        }
+        if (id == R.id.nav_logout) {
+            // Handle the camera action
+            FirebaseAuth auth;
+            auth = FirebaseAuth.getInstance();
+            FirebaseUser user = auth.getCurrentUser();
+            Toast.makeText(MainActivity.this,user.getEmail(),Toast.LENGTH_LONG).show();
+            auth.signOut();
+            startActivity(new Intent(MainActivity.this, LoginActivity.class));
+            finish();
+
+// this listener will be called when there is change in firebase user session
+            FirebaseAuth.AuthStateListener authListener = new FirebaseAuth.AuthStateListener() {
+                @Override
+                public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+                    FirebaseUser user = firebaseAuth.getCurrentUser();
+                    if (user == null) {
+                        // user auth state is changed - user is null
+                        // launch login activity
+                        startActivity(new Intent(MainActivity.this, LoginActivity.class));
+                        finish();
+                    }
+                }
+            };
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);

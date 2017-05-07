@@ -56,9 +56,9 @@ public class TestsAdapter extends RecyclerView.Adapter<TestsAdapter.ViewHolder>{
                         Intent intent=new Intent(context,TestWeb2.class);
                         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                         intent.putExtra("url",holder.textViewName.getText().toString());
-                            child = dataSnapshot.getKey();
                             mDatabase1.child(child).removeValue();
-                        context.startActivity(intent);}
+                        context.startActivity(intent);
+                            }
 
                     }
 
