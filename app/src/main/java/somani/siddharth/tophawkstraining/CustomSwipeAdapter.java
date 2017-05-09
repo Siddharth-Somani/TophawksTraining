@@ -173,7 +173,7 @@ public class CustomSwipeAdapter extends PagerAdapter {
                                         url=dataSnapshot.child("testurl").getValue(String.class);
                                         testname=dataSnapshot.child("testname").getValue(String.class);
                                         mDatabase2.child(testname).child("pending").setValue(url);
-                                        //Toast.makeText(ctx,mDatabase2.getKey(),Toast.LENGTH_LONG).show();
+                                        //Toast.make Text(ctx,mDatabase2.getKey(),Toast.LENGTH_LONG).show();
                                         Toast.makeText(ctx,"You can take the tests later in the tests portal",Toast.LENGTH_LONG).show();
                                         Intent intent=new Intent(ctx,Tests.class);
                                         /*intent.putExtra("testname",testname);*/
