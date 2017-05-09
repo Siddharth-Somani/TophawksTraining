@@ -18,6 +18,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.firebase.client.ChildEventListener;
@@ -39,16 +40,18 @@ public class MainActivity extends AppCompatActivity
     private RecyclerView recyclerView;
     private RecyclerView.Adapter adapter;
     private Firebase mDatabase,mDatabase1;
+    public TextView nameText;
     Button logout;
   //  private ProgressDialog progressDialog;
     private List<UploadPojo> uploads;
-     String c;
+     String c,nam;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+
         setSupportActionBar(toolbar);
         Firebase.setAndroidContext(this);
         //logout=(Button)findViewById(R.id.logout);
@@ -59,6 +62,11 @@ public class MainActivity extends AppCompatActivity
         toggle.syncState();
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        View headerView = navigationView.getHeaderView(0);
+        nameText=(TextView)headerView.findViewById(R.id.profiletext);
+        /*navUsername = (TextView) headerView.findViewById(R.id.navUsername);
+        navUsernam.setText("Your Text Here");
+*/
         navigationView.setNavigationItemSelectedListener(this);
         FirebaseAuth auth;
         auth = FirebaseAuth.getInstance();
@@ -87,6 +95,9 @@ public class MainActivity extends AppCompatActivity
                String email=dataSnapshot.child("email").getValue(String.class);
                if(email.equals(user.getEmail()))
                {c=dataSnapshot.child("company").getValue(String.class);
+                   nam=dataSnapshot.child("name").getValue(String.class);
+                   nameText.setText(nam);
+                   //Toast.makeText(MainActivity.this,nam,Toast.LENGTH_LONG).show();
                    mDatabase = new Firebase("https://occupation-fc1fb.firebaseio.com/").child(c);
                    mDatabase.addChildEventListener(new ChildEventListener() {
                        @Override
@@ -96,8 +107,10 @@ public class MainActivity extends AppCompatActivity
                            String url = dataSnapshot.child("url").getValue(String.class);
                            String modules = dataSnapshot.child("modules").getValue(String.class);
                            String minutes = dataSnapshot.child("minutes").getValue(String.class);
-                           // Toast.makeText(MainActivity.this,dataSnapshot.getKey(),Toast.LENGTH_LONG).show();
-                           UploadPojo uploadPojo=new UploadPojo(name,url,modules,minutes);
+                           String learners = dataSnapshot.child("learners").getValue(String.class);
+                           String summary=dataSnapshot.child("summary").getValue(String.class);
+                           // Toast.makeText(MainActivity.this,nam,Toast.LENGTH_LONG).show();
+                           UploadPojo uploadPojo=new UploadPojo(name,url,modules,minutes,learners,summary);
                            uploads.add(uploadPojo);
                            recyclerView.setAdapter(adapter);
                            adapter.notifyDataSetChanged();
@@ -148,7 +161,7 @@ public class MainActivity extends AppCompatActivity
            }
        });
 
-        Toast.makeText(MainActivity.this,c,Toast.LENGTH_LONG).show();
+        //Toast.makeText(MainActivity.this,c,Toast.LENGTH_LONG).show();
         recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));

@@ -58,6 +58,8 @@ public class TestsAdapter extends RecyclerView.Adapter<TestsAdapter.ViewHolder>{
                 {c=dataSnapshot.getKey();
                     mDatabase1 = new Firebase("https://occupation-fc1fb.firebaseio.com/Users").child(c).child("Tests");
                     holder.textViewName.setText(upload.getHeading());
+                    holder.textViewName2.setText(upload.getTestname());
+
                     holder.cardView.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
@@ -66,6 +68,7 @@ public class TestsAdapter extends RecyclerView.Adapter<TestsAdapter.ViewHolder>{
                                 public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                                     if(holder.textViewName.getText().toString().equals(dataSnapshot.child("pending").getValue(String.class))){
                                         child = dataSnapshot.getKey();
+                                        //holder.textViewName2.setText(child);
                                         Toast.makeText(context,"After taking the test, this test will dissapear from the pending tests portal",Toast.LENGTH_LONG).show();
                                         Intent intent=new Intent(context,TestWeb2.class);
                                         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);

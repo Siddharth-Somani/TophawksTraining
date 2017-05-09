@@ -28,7 +28,7 @@ public class CardActivity extends AppCompatActivity {
     private RecyclerView.Adapter adapter;
     public static Firebase mDatabase,mDatabase1;
     public static String iscompleted,n;
-    TextView textView1,textView2;
+    TextView textView1,textView2,textView3,textView4;
     //private ProgressDialog progressDialog;
     private List<CardPojo> uploads;
     @Override
@@ -52,11 +52,17 @@ public class CardActivity extends AppCompatActivity {
         childl= extras.getString("child");
         String name=extras.getString("name");
         String minutes=extras.getString("minutes");
+        String learners=extras.getString("learners");
+        String summary=extras.getString("summary");
         Firebase.setAndroidContext(this);
         textView1=(TextView)findViewById(R.id.textView9) ;
         textView2=(TextView)findViewById(R.id.minutes) ;
+        textView3=(TextView)findViewById(R.id.learners) ;
+        textView4=(TextView)findViewById(R.id.summary) ;
         textView1.setText(name);
         textView2.setText(minutes);
+        textView3.setText(learners);
+        textView4.setText(summary);
         recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));

@@ -39,7 +39,7 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder>{
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
-        CardPojo upload = uploads.get(position);
+        final CardPojo upload = uploads.get(position);
         mDatabase1=CardActivity.mDatabase;
 
         holder.textViewName.setText(upload.getName());
@@ -70,6 +70,7 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder>{
                             //Toast.makeText(context, child, Toast.LENGTH_LONG).show();
                             Intent intent=new Intent(view.getContext(),Modules.class);
                             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                            intent.putExtra("number",upload.getModules());
                             intent.putExtra("child",child);
                             context.startActivity(intent);
 
@@ -110,6 +111,7 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder>{
         public TextView textViewName;
         public TextView textViewNumber;
         public TextView textViewMinutes;
+        public TextView textViewSummary;
         public ImageView imageView;
         public ImageView imageView4;
         public CardView cardView;
@@ -121,6 +123,7 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder>{
             imageView4 = (ImageView) itemView.findViewById(R.id.imageView4);
             textViewMinutes = (TextView) itemView.findViewById(R.id.learner);
             textViewNumber = (TextView) itemView.findViewById(R.id.time);
+            textViewSummary=(TextView)itemView.findViewById(R.id.summary);
         }
     }
 }

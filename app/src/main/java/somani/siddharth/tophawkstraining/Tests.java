@@ -22,7 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Tests extends AppCompatActivity {
-String url,c;
+String url,c,testname="";
     private RecyclerView recyclerView;
     private RecyclerView.Adapter adapter;
     private List<TestsPojo> uploads;
@@ -42,6 +42,9 @@ String url,c;
                 finish();
             }
         });
+        //testname=CustomSwipeAdapter.testname;
+        //final Bundle extras=getIntent().getExtras();
+
         recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -63,7 +66,7 @@ String url,c;
                         public void onChildAdded(com.firebase.client.DataSnapshot dataSnapshot, String s) {
                             // progressDialog.dismiss();
                             url = dataSnapshot.child("pending").getValue(String.class);
-                            TestsPojo testsPojo = new TestsPojo(url);
+                            TestsPojo testsPojo = new TestsPojo(url,dataSnapshot.getKey());
                             //Toast.makeText(Tests.this,dataSnapshot.getKey(),Toast.LENGTH_LONG).show();
                             uploads.add(testsPojo);
                             recyclerView.setAdapter(adapter);

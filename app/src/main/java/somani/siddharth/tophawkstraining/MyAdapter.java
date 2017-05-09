@@ -26,7 +26,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
     private Context context;
     private List<UploadPojo> uploads;
     private Firebase mDatabase,mDatabase1;
-    String child,c;
+    String child,c,na;
     public MyAdapter(Context context, List<UploadPojo> uploads) {
         this.uploads = uploads;
         this.context = context;
@@ -43,12 +43,13 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
-        UploadPojo upload = uploads.get(position);
+        final UploadPojo upload = uploads.get(position);
 
         holder.textViewName.setText(upload.getName());
         holder.textViewModules.setText(upload.getModules());
         holder.textViewMinutes.setText(upload.getMinutes());
         holder.textViewName.setText(upload.getName());
+        holder.textViewLearners.setText(upload.getLearners());
         FirebaseAuth auth;
         auth = FirebaseAuth.getInstance();
         final FirebaseUser user = auth.getCurrentUser();
@@ -80,6 +81,8 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
                                         intent.putExtra("child",child);
                                         intent.putExtra("name",holder.textViewName.getText().toString());
                                         intent.putExtra("minutes",holder.textViewMinutes.getText().toString());
+                                        intent.putExtra("learners",holder.textViewLearners.getText().toString());
+                                        intent.putExtra("summary",upload.getSummary());
                                         context.startActivity(intent);
 
                                     }
@@ -147,6 +150,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
         public TextView textViewMinutes;
         public ImageView imageView;
         public CardView cardView;
+        public TextView textViewLearners;
 
         public ViewHolder(View itemView) {
             super(itemView);
@@ -155,6 +159,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
             imageView = (ImageView) itemView.findViewById(R.id.imageView);
             textViewMinutes=(TextView)itemView.findViewById(R.id.time);
             textViewModules=(TextView)itemView.findViewById(R.id.module);
+            textViewLearners=(TextView)itemView.findViewById(R.id.learner);
         }
     }
 }

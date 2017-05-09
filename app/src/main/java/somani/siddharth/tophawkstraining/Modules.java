@@ -38,7 +38,7 @@ ViewPager viewPager;
             }
         });
         Firebase.setAndroidContext(this);
-        Bundle extras=getIntent().getExtras();
+        final Bundle extras=getIntent().getExtras();
         childl= extras.getString("child");
         viewPager=(ViewPager)findViewById(R.id.view_pager);
         slides=new ArrayList<>();
@@ -81,12 +81,10 @@ ViewPager viewPager;
 
             }
         });
-        mDatabase3.addChildEventListener(new ChildEventListener() {
+        /*mDatabase3.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(com.firebase.client.DataSnapshot dataSnapshot, String s) {
-                 no=dataSnapshot.child("number").getValue(String.class);
-                CustomSwipeAdapter adapter=new CustomSwipeAdapter(Modules.this,slides);
-                viewPager.setAdapter(adapter);
+                // no=dataSnapshot.child("number").getValue(String.class);
 
                 //Toast.makeText(Modules.this,no,Toast.LENGTH_LONG).show();
             }
@@ -110,7 +108,11 @@ ViewPager viewPager;
             public void onCancelled(FirebaseError firebaseError) {
 
             }
-        });
+        });*/
+        no=extras.getString("number");
+        CustomSwipeAdapter adapter=new CustomSwipeAdapter(Modules.this,slides);
+        viewPager.setAdapter(adapter);
+
         //Toast.makeText(this,no,Toast.LENGTH_LONG).show();
 
 

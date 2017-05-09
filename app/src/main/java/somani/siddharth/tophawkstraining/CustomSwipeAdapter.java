@@ -37,7 +37,7 @@ public class CustomSwipeAdapter extends PagerAdapter {
     private List<SlidesPojo> slides;
     private LayoutInflater layoutInflater;
     String no;
-    public static String bool,is,url,c;
+    public static String bool,is,url,c,testname;
     public static Firebase mDatabase,mDatabase2,mDatabase3;
     public CustomSwipeAdapter(Context ctx,List<SlidesPojo> slides)
     {
@@ -171,7 +171,14 @@ public class CustomSwipeAdapter extends PagerAdapter {
                                     @Override
                                     public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                                         url=dataSnapshot.child("testurl").getValue(String.class);
-                                        mDatabase2.push().child("pending").setValue(url);
+                                        testname=dataSnapshot.child("testname").getValue(String.class);
+                                        mDatabase2.child(testname).child("pending").setValue(url);
+                                        //Toast.makeText(ctx,mDatabase2.getKey(),Toast.LENGTH_LONG).show();
+                                        Toast.makeText(ctx,"You can take the tests later in the tests portal",Toast.LENGTH_LONG).show();
+                                        Intent intent=new Intent(ctx,Tests.class);
+                                        /*intent.putExtra("testname",testname);*/
+                                        ctx.startActivity(intent);
+                                        /*mDatabase2.push().child("pendingname").setValue(testname);*/
                                     }
 
                                     @Override
@@ -194,9 +201,6 @@ public class CustomSwipeAdapter extends PagerAdapter {
 
                                     }
                                 });
-                                Toast.makeText(ctx,"You can take the tests later in the tests portal",Toast.LENGTH_LONG).show();
-                                Intent intent=new Intent(ctx,Tests.class);
-                                ctx.startActivity(intent);
                             }
                         });
                     }
