@@ -166,6 +166,37 @@ public class CustomSwipeAdapter extends PagerAdapter {
                         later.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View view) {
+                                mDatabase3.addChildEventListener(new ChildEventListener() {
+                                    @Override
+                                    public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                                        String email=dataSnapshot.child("email").getValue(String.class);
+                                        if(email.equals(user.getEmail())) {
+                                            String name = dataSnapshot.child("name").getValue(String.class);
+                                            bool = "yes";
+                                            Modules.mDatabase1.child(name).setValue(bool);
+                                        }
+                                    }
+
+                                    @Override
+                                    public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+                                    }
+
+                                    @Override
+                                    public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+                                    }
+
+                                    @Override
+                                    public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+                                    }
+
+                                    @Override
+                                    public void onCancelled(FirebaseError firebaseError) {
+
+                                    }
+                                });
                                 mDatabase=Modules.mDatabase3;
                                 mDatabase.addChildEventListener(new ChildEventListener() {
                                     @Override

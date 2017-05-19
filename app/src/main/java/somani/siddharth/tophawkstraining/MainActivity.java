@@ -18,6 +18,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Button;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -42,7 +43,8 @@ public class MainActivity extends AppCompatActivity
     private Firebase mDatabase,mDatabase1;
     public TextView nameText;
     Button logout;
-  //  private ProgressDialog progressDialog;
+    private ProgressBar progressBar;
+  private ProgressDialog progressDialog;
     private List<UploadPojo> uploads;
      String c,nam;
 
@@ -73,6 +75,10 @@ public class MainActivity extends AppCompatActivity
         final FirebaseUser user = auth.getCurrentUser();
         uploads = new ArrayList<>();
         //displaying progress dialog while fetching images
+        progressDialog = new ProgressDialog(this);
+        progressDialog.setMessage("Loading...");
+        progressDialog.show();
+        //progressBar
         mDatabase1 = new Firebase("https://occupation-fc1fb.firebaseio.com/Users");
 
 
@@ -114,6 +120,7 @@ public class MainActivity extends AppCompatActivity
                            uploads.add(uploadPojo);
                            recyclerView.setAdapter(adapter);
                            adapter.notifyDataSetChanged();
+                           progressDialog.dismiss();
                        }
 
                        @Override
@@ -133,7 +140,7 @@ public class MainActivity extends AppCompatActivity
 
                        @Override
                        public void onCancelled(FirebaseError firebaseError) {
-
+progressDialog.dismiss();
                        }
                    });
                }

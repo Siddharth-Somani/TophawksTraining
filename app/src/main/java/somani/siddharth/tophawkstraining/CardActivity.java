@@ -29,7 +29,7 @@ public class CardActivity extends AppCompatActivity {
     public static Firebase mDatabase,mDatabase1;
     public static String iscompleted,n;
     TextView textView1,textView2,textView3,textView4;
-    //private ProgressDialog progressDialog;
+    private ProgressDialog progressDialog;
     private List<CardPojo> uploads;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,16 +63,14 @@ public class CardActivity extends AppCompatActivity {
         textView2.setText(minutes);
         textView3.setText(learners);
         textView4.setText(summary);
-        recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
-        recyclerView.setHasFixedSize(true);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
-       /* progressDialog = new ProgressDialog(this);*/
+
+       progressDialog = new ProgressDialog(this);
 
         uploads = new ArrayList<>();
 
         //displaying progress dialog while fetching images
-       /* progressDialog.setMessage("Please wait...");
-        progressDialog.show();*/
+        progressDialog.setMessage("Loading...");
+        progressDialog.show();
         //Toast.makeText(CardActivity.this,childl,Toast.LENGTH_LONG).show();
         mDatabase1 = new Firebase("https://occupation-fc1fb.firebaseio.com/Users");
         mDatabase1.addChildEventListener(new ChildEventListener() {
@@ -100,6 +98,10 @@ public class CardActivity extends AppCompatActivity {
                             // Toast.makeText(MainActivity.this,dataSnapshot.getKey(),Toast.LENGTH_LONG).show();
                             CardPojo uploadPojo=new CardPojo(name,url,modules,minutes,iscompleted);
                             uploads.add(uploadPojo);
+                            recyclerView.setAdapter(adapter);
+                            adapter.notifyDataSetChanged();
+                            progressDialog.dismiss();
+
                         }
 
                         @Override
@@ -119,6 +121,7 @@ public class CardActivity extends AppCompatActivity {
 
                         @Override
                         public void onCancelled(FirebaseError firebaseError) {
+                            progressDialog.dismiss();
 
                         }
                     });
@@ -149,9 +152,11 @@ public class CardActivity extends AppCompatActivity {
         });
 
         //creating adapter
+        recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
+        recyclerView.setHasFixedSize(true);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
         adapter = new CardAdapter(getApplicationContext(), uploads);
         //adding adapter to recyclerview
-        recyclerView.setAdapter(adapter);
 
     }
 

@@ -58,6 +58,8 @@ ViewPager viewPager;
                 //Toast.makeText(Modules.this,dataSnapshot.getKey(),Toast.LENGTH_LONG).show();
                 SlidesPojo slidesdPojo=new SlidesPojo(heading,url,info,isimage);
                 slides.add(slidesdPojo);
+                CustomSwipeAdapter adapter=new CustomSwipeAdapter(Modules.this,slides);
+                viewPager.setAdapter(adapter);
 
             }
 
@@ -110,8 +112,7 @@ ViewPager viewPager;
             }
         });*/
         no=extras.getString("number");
-        CustomSwipeAdapter adapter=new CustomSwipeAdapter(Modules.this,slides);
-        viewPager.setAdapter(adapter);
+
 
         //Toast.makeText(this,no,Toast.LENGTH_LONG).show();
 
