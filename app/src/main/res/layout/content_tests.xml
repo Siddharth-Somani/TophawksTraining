@@ -11,14 +11,16 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     android:focusableInTouchMode="true"
     android:orientation="vertical"
-    app:layout_behavior="@string/appbar_scrolling_view_behavior">
-<TextView
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:text="Pending Tests"
-    android:textSize="20dp"
-    android:textColor="#000"
-    android:gravity="center"/>
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    android:background="@drawable/back1"
+    >
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Pending Tests"
+        android:textSize="20dp"
+        android:textColor="#000"
+        android:gravity="center"/>
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recyclerView"
         android:layout_width="match_parent"

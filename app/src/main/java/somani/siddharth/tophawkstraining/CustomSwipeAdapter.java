@@ -1,5 +1,6 @@
 package somani.siddharth.tophawkstraining;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.media.MediaPlayer;
@@ -60,7 +61,7 @@ public class CustomSwipeAdapter extends PagerAdapter {
             Firebase.setAndroidContext(ctx);
             View item_view = layoutInflater.inflate(R.layout.swipe_layout, container, false);
 //        //Video
-       //String str="https://firebasestorage.googleapis.com/v0/b/swipeimplementation.appspot.com/o/Nikon%20D7500-%20Time-lapse%20sample%20video.mp4?alt=media&token=3ae5b5b0-c72e-4ea1-9b87-e4442870b1ed";
+            //String str="https://firebasestorage.googleapis.com/v0/b/swipeimplementation.appspot.com/o/Nikon%20D7500-%20Time-lapse%20sample%20video.mp4?alt=media&token=3ae5b5b0-c72e-4ea1-9b87-e4442870b1ed";
 //        Uri uri = Uri.parse(str);
 //        VideoView mVideoView= (VideoView)findViewById(R.id.VideoView);
 //        final ProgressBar progressBarLandScape=(ProgressBar)findViewById(R.id.progressbar);
@@ -89,7 +90,7 @@ public class CustomSwipeAdapter extends PagerAdapter {
 //                return false;
 //            }
 //        });
-        //String str="https://firebasestorage.googleapis.com/v0/b/videoplay-e370a.appspot.com/o/Nikon%20D7500-%20Time-lapse%20sample%20video.mp4?alt=media&token=58cdbd51-a96f-481c-80b1-b755928ace58";
+            //String str="https://firebasestorage.googleapis.com/v0/b/videoplay-e370a.appspot.com/o/Nikon%20D7500-%20Time-lapse%20sample%20video.mp4?alt=media&token=58cdbd51-a96f-481c-80b1-b755928ace58";
 
             SlidesPojo slidesPojo = slides.get(position);
             Uri uri = Uri.parse(slidesPojo.getUrl());
@@ -97,27 +98,27 @@ public class CustomSwipeAdapter extends PagerAdapter {
             ImageView imageView = (ImageView) item_view.findViewById(R.id.image_view);
             TextView textView = (TextView) item_view.findViewById(R.id.image_count);
             TextView textView2 = (TextView) item_view.findViewById(R.id.image_info);
-        final VideoView mVideoView= (VideoView)item_view.findViewById(R.id.VideoView);
-        //final ProgressBar progressBarLandScape=(ProgressBar)item_view.findViewById(R.id.progressbar);
+            final VideoView mVideoView= (VideoView)item_view.findViewById(R.id.VideoView);
+            //final ProgressBar progressBarLandScape=(ProgressBar)item_view.findViewById(R.id.progressbar);
 
             //Toast.makeText(ctx,Integer.toString(arr[0]),Toast.LENGTH_LONG).show();
             //Toast.makeText(ctx,Integer.toString(slides.size()),Toast.LENGTH_LONG).show();
             Glide.with(ctx).load(slidesPojo.getUrl()).into(imageView);
             textView.setText(slidesPojo.getHeading());
             textView2.setText(slidesPojo.getInfo());
-      // progressBarLandScape.setVisibility(View.VISIBLE);
-        MediaController mediaController = new MediaController(ctx);
-        mediaController.setAnchorView(mVideoView);
-        mVideoView.setMediaController(mediaController);
-        //mVideoView.setVideoURI(Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.sample));
-        mVideoView.setVideoURI(uri);
-        mVideoView.requestFocus();
-        mVideoView.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
-            @Override
-            public void onPrepared(MediaPlayer mp) {
-                mVideoView.start();
-            }
-        });
+            // progressBarLandScape.setVisibility(View.VISIBLE);
+            MediaController mediaController = new MediaController(ctx);
+            mediaController.setAnchorView(mVideoView);
+            mVideoView.setMediaController(mediaController);
+            //mVideoView.setVideoURI(Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.sample));
+            mVideoView.setVideoURI(uri);
+            mVideoView.requestFocus();
+            mVideoView.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+                @Override
+                public void onPrepared(MediaPlayer mp) {
+                    mVideoView.start();
+                }
+            });
        /*int c=1;
         if(c==1)
         {
@@ -131,18 +132,18 @@ public class CustomSwipeAdapter extends PagerAdapter {
             mVideoView.setVisibility(View.GONE);
             //progressBarLandScape.setVisibility(View.GONE);
         }*/
-       if(slidesPojo.getIsimage().equals("no"))
-       {
-           imageView.setVisibility(View.GONE);
-           //progressBarLandScape.setVisibility(View.GONE);
-           mVideoView.setVisibility(View.VISIBLE);
-       }
-       else
-       {
-           imageView.setVisibility(View.VISIBLE);
-           //progressBarLandScape.setVisibility(View.GONE);
-           mVideoView.setVisibility(View.GONE);
-       }
+            if(slidesPojo.getIsimage().equals("no"))
+            {
+                imageView.setVisibility(View.GONE);
+                //progressBarLandScape.setVisibility(View.GONE);
+                mVideoView.setVisibility(View.VISIBLE);
+            }
+            else
+            {
+                imageView.setVisibility(View.VISIBLE);
+                //progressBarLandScape.setVisibility(View.GONE);
+                mVideoView.setVisibility(View.GONE);
+            }
 
             container.addView(item_view);
             return item_view;
@@ -154,6 +155,7 @@ public class CustomSwipeAdapter extends PagerAdapter {
             View item_view = layoutInflater.inflate(R.layout.swipe_layout2, container, false);
             Button now=(Button)item_view.findViewById(R.id.taketestnow);
             final Button later=(Button)item_view.findViewById(R.id.taketestlater);
+
             mDatabase3 = new Firebase("https://occupation-fc1fb.firebaseio.com/Users");
             mDatabase3.addChildEventListener(new ChildEventListener() {
                 @Override
@@ -259,6 +261,15 @@ public class CustomSwipeAdapter extends PagerAdapter {
                 }
             });
 
+            Button next = (Button)item_view.findViewById(R.id.studynextmodule);
+            next.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    ((Activity)ctx).finish();
+                }
+            });
+
+
             now.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -307,9 +318,9 @@ public class CustomSwipeAdapter extends PagerAdapter {
     @Override
     public void destroyItem(ViewGroup container, int position, Object object) {
         if(position!=Integer.parseInt(no))
-        container.removeView((LinearLayout)object);
+            container.removeView((LinearLayout)object);
         else
-        container.removeView((RelativeLayout)object);
+            container.removeView((RelativeLayout)object);
     }
     @Override
     public int getCount() {
@@ -317,10 +328,9 @@ public class CustomSwipeAdapter extends PagerAdapter {
         // Toast.makeText(ctx,"Hello",Toast.LENGTH_LONG).show();
         no = Modules.no;
         //Toast.makeText(ctx, no, Toast.LENGTH_LONG).show();
-       // if (Integer.parseInt(no) != 0)
-            return Integer.parseInt(no)+1;
+        // if (Integer.parseInt(no) != 0)
+        return Integer.parseInt(no)+1;
 
         // return 2;
     }
 }
-

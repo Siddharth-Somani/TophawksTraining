@@ -126,7 +126,7 @@ public class TestsAdapter extends RecyclerView.Adapter<TestsAdapter.ViewHolder>{
 
             }
         });
-            }
+    }
     @Override
     public int getItemCount() {
         return uploads.size();

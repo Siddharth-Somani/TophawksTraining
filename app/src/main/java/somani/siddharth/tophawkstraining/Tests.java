@@ -22,7 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Tests extends AppCompatActivity {
-String url,c,testname="";
+    String url,c,testname="";
     private RecyclerView recyclerView;
     private RecyclerView.Adapter adapter;
     private List<TestsPojo> uploads;
@@ -122,5 +122,4 @@ String url,c,testname="";
         adapter = new TestsAdapter(getApplicationContext(), uploads);
     }
 
-    }
-
+}

@@ -34,10 +34,10 @@ public class TestWeb2 extends AppCompatActivity {
         final WebView myWebView = (WebView) findViewById(R.id.myWebView);
         Bundle bundle=getIntent().getExtras();
         url=bundle.getString("url");
-                myWebView.loadUrl(url);
-                myWebView.setWebViewClient(new MyWebViewClient());
-                WebSettings webSettings = myWebView.getSettings();
-                webSettings.setJavaScriptEnabled(true);
+        myWebView.loadUrl(url);
+        myWebView.setWebViewClient(new MyWebViewClient());
+        WebSettings webSettings = myWebView.getSettings();
+        webSettings.setJavaScriptEnabled(true);
 
     }
     private class MyWebViewClient extends WebViewClient {
